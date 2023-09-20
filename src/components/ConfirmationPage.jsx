@@ -18,7 +18,7 @@ export default function ConfirmationPage() {
 
   useEffect(() => {
     axios.get(`http://localhost:3001/api/orders/${id}`).then((response) => {
-      console.log(response.data);
+      console.log(response);
       setOrderData(response.data);
     });
   }, [id]);

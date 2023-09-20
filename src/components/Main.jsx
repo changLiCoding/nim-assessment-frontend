@@ -4,10 +4,9 @@ import Order from "./Order";
 import OrderModal from "./OrderModal";
 import styles from "./styles/Order.module.css";
 
-function Main() {
+function Main({ orderModal, setOrderModal }) {
   const [menuItems, setMenuItems] = useState([]);
   const [order, setOrder] = useState([]);
-  const [orderModal, setOrderModal] = useState(false);
 
   const getItems = async () => {
     const response = await fetch("/api/menu");
@@ -18,6 +17,8 @@ function Main() {
   useEffect(() => {
     getItems();
   }, []);
+
+  console.log("order from main: ", order);
 
   return (
     <div className="page">
