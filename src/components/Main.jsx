@@ -9,7 +9,7 @@ function Main({ orderModal, setOrderModal }) {
   const [order, setOrder] = useState([]);
 
   const getItems = async () => {
-    const response = await fetch("/api/menu");
+    const response = await fetch("http://localhost:3001/api/menu");
     const data = await response.json();
     setMenuItems(data);
   };
@@ -17,8 +17,6 @@ function Main({ orderModal, setOrderModal }) {
   useEffect(() => {
     getItems();
   }, []);
-
-  console.log("order from main: ", order);
 
   return (
     <div className="page">
