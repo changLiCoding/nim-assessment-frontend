@@ -2,13 +2,23 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles/OrderModal.module.css";
 
+const phoneNumConverter = (phoneNumber) => {
+  const cleaned = phoneNumber.replace(/\D/g, "");
+
+  const formatted = `(${cleaned.slice(0, 3)}) ${cleaned.slice(
+    3,
+    6
+  )}-${cleaned.slice(6)}`;
+
+  return formatted;
+};
+
 function OrderModal({ order, setOrderModal }) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
+  const [orderError, setOrderError] = useState("");
   const navigate = useNavigate();
-
-  console.log(order);
 
   const placeOrder = async () => {
     const response = await fetch("/api/orders", {
@@ -17,22 +27,18 @@ function OrderModal({ order, setOrderModal }) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        name,
-        phone,
-        address,
+        name: name.trim(),
+        // Use the formatted phone number
+        phone: phoneNumConverter(phone),
+        address: address.trim(),
         items: order
       })
     });
     const data = await response.json();
 
-    // if (data.id) {
-    //   console.log("redirecting");
-    //   setOrderModal(false);
-    //   // return redirect(`/order-confirmation`);
-    //   return data
-    // }
     return data;
   };
+
   return (
     <>
       <div
@@ -56,12 +62,11 @@ function OrderModal({ order, setOrderModal }) {
               <input
                 onChange={(e) => {
                   e.preventDefault();
-                  if (e.target.value.trim()) {
-                    setName(e.target.value);
-                  }
+                  setName(e.target.value);
                 }}
                 type="text"
                 id="name"
+                value={name}
               />
             </label>
           </div>
@@ -71,12 +76,10 @@ function OrderModal({ order, setOrderModal }) {
               <input
                 onChange={(e) => {
                   e.preventDefault();
-                  if (e.target.value.trim()) {
-                    console.log(typeof e.target.value);
-                    setPhone(e.target.value);
-                  }
+                  setPhone(phoneNumConverter(e.target.value));
                 }}
-                type="phone"
+                value={phone}
+                type="text"
                 id="phone"
               />
             </label>
@@ -87,16 +90,17 @@ function OrderModal({ order, setOrderModal }) {
               <input
                 onChange={(e) => {
                   e.preventDefault();
-                  if (e.target.value.trim()) {
-                    setAddress(e.target.value);
-                  }
+                  setAddress(e.target.value);
                 }}
-                type="phone"
+                value={address}
+                type="text"
                 id="address"
               />
             </label>
           </div>
         </form>
+
+        {orderError && <p className={styles.orderError}>{orderError}</p>}
 
         <div className={styles.orderModalButtons}>
           <button
@@ -107,6 +111,14 @@ function OrderModal({ order, setOrderModal }) {
           </button>
           <button
             onClick={async () => {
+              if (!name || !phone || !address) {
+                setOrderError("Please fill out all fields");
+
+                setTimeout(() => {
+                  setOrderError("");
+                }, 3000);
+                return;
+              }
               const data = await placeOrder();
               navigate(`/order-confirmation/${data.id}`);
             }}

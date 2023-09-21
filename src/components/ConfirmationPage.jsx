@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useParams } from "react-router-dom";
 
 import OrderConfirmation from "./OrderConfirmation";
@@ -17,9 +16,11 @@ export default function ConfirmationPage() {
   });
 
   useEffect(() => {
-    axios.get(`/api/orders/${id}`).then((response) => {
-      setOrderData(response.data);
-    });
+    fetch(`/api/orders/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setOrderData(data);
+      });
   }, [id]);
 
   return (
