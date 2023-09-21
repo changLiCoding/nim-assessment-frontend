@@ -17,13 +17,10 @@ export default function ConfirmationPage() {
   });
 
   useEffect(() => {
-    axios.get(`http://localhost:3001/api/orders/${id}`).then((response) => {
-      console.log(response);
+    axios.get(`/api/orders/${id}`).then((response) => {
       setOrderData(response.data);
     });
   }, [id]);
-
-  console.log(id);
 
   return (
     <div className={styles.orderContainer}>

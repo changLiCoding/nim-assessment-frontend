@@ -1,6 +1,6 @@
 {
   "name": "assessment-nim",
-  "proxy": "https://nim-assessment-backend-production.up.railway.app",
+  "proxy": "http://localhost:3001",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

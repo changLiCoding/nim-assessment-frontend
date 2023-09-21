@@ -11,7 +11,7 @@ function OrderModal({ order, setOrderModal }) {
   console.log(order);
 
   const placeOrder = async () => {
-    const response = await fetch("http://localhost:3001/api/orders", {
+    const response = await fetch("/api/orders", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -24,9 +24,6 @@ function OrderModal({ order, setOrderModal }) {
       })
     });
     const data = await response.json();
-
-    console.log(data);
-    console.log(data.id);
 
     // if (data.id) {
     //   console.log("redirecting");
@@ -41,7 +38,7 @@ function OrderModal({ order, setOrderModal }) {
       <div
         label="Close"
         className={styles.orderModal}
-        onKeyPress={(e) => {
+        onKeyDown={(e) => {
           if (e.key === "Escape") {
             setOrderModal(false);
           }
@@ -59,7 +56,9 @@ function OrderModal({ order, setOrderModal }) {
               <input
                 onChange={(e) => {
                   e.preventDefault();
-                  setName(e.target.value);
+                  if (e.target.value.trim()) {
+                    setName(e.target.value);
+                  }
                 }}
                 type="text"
                 id="name"
@@ -72,7 +71,10 @@ function OrderModal({ order, setOrderModal }) {
               <input
                 onChange={(e) => {
                   e.preventDefault();
-                  setPhone(e.target.value);
+                  if (e.target.value.trim()) {
+                    console.log(typeof e.target.value);
+                    setPhone(e.target.value);
+                  }
                 }}
                 type="phone"
                 id="phone"
@@ -85,7 +87,9 @@ function OrderModal({ order, setOrderModal }) {
               <input
                 onChange={(e) => {
                   e.preventDefault();
-                  setAddress(e.target.value);
+                  if (e.target.value.trim()) {
+                    setAddress(e.target.value);
+                  }
                 }}
                 type="phone"
                 id="address"
